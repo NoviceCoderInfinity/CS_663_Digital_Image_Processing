@@ -1,0 +1,128 @@
+\documentclass{article}
+\usepackage{helvet}
+
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{physics}
+
+
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\title{Question 6: Assignment 3: CS 663, Fall 2024}
+\author{
+\IEEEauthorblockN{
+    \begin{tabular}{cccc}
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Amitesh Shekhar\\
+            IIT Bombay\\
+            22b0014@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Anupam Rawat\\
+            IIT Bombay\\
+            22b3982@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Toshan Achintya Golla\\
+            IIT Bombay\\
+            22b2234@iitb.ac.in
+        \end{minipage} \\
+        \\ 
+    \end{tabular}
+}
+}
+
+\date{September 24, 2024}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{ulem,graphicx}
+\usepackage[margin=0.5in]{geometry}
+
+\begin{document}
+\maketitle
+
+\\
+
+\begin{enumerate}
+\item 
+If \( \mathcal{F} \) is the continuous Fourier operator, prove that $\mathcal{F}(\mathcal{F} (\mathcal{F}(\mathcal{F}(f(t))))) = f(t)$ \textbf{Hint:} Prove that $\mathcal{F}(\mathcal{F}(f(t))) = f(-t)$ and proceed further from there. What could be a practical use of the relationship $\mathcal{F}(\mathcal{F}(f(t))) = f(-t)$ while deriving Fourier transforms of certain functions? \textsf{[12+3=15 points]}
+\\
+    \makebox[0pt][l]{\hspace{-7pt}\textit{Soln:}} % Aligns "Answer:" to the left
+\\The Fourier transform of a function \( f(t) \), denoted as \( \mathcal{F}(f(t)) \) or F($\mu$), is given by:
+\[
+\mathcal{F}(f(t)) = F(\mu) = \int_{-\infty}^{\infty} f(t) e^{-j 2 \pi \mu t} \, dt
+\]
+
+On the same lines, \( \mathcal{F}(\mathcal{F}(f(t))) \) is defined as:
+\[
+\mathcal{F}(\mathcal{F}(f(t))) = \mathcal{F}(F(\mu))) = \int_{-\infty}^{\infty} F(\mu) e^{-j 2 \pi t \mu} \, d\mu
+\]
+
+We know that:
+\[
+f(t) = \int_{-\infty}^{\infty} F(\mu) e^{+j 2 \pi \mu t} \, d\mu
+\]
+which implies:
+\[
+f(-t) = \int_{-\infty}^{\infty} F(\mu) e^{-j 2 \pi \mu t} \, d\mu = \mathcal{F} (\mathcal{F} (f(t)))
+\]
+
+Thus: \[ \mathcal{F} (\mathcal{F} (f(t))) = f(-t) \\ \]
+
+Next, we know:
+\[
+\mathcal{F}(f(-t)) = \int_{-\infty}^{\infty} f(-t) e^{-j 2 \pi \mu t} \, dt = \int_{-\infty}^{\infty} f(t) e^{-j 2 \pi \mu (-t) } \, dt = F(-\mu)
+\]
+So, we can say that: \[ \mathcal{F} (\mathcal{F} (\mathcal{F} ( f(t) ))) = \mathcal{F} (f(-t)) = F(-\mu)\]
+
+Moving ahead, we get:
+\[
+\mathcal{F} (\mathcal{F} (\mathcal{F} (\mathcal{F} ( f(t) )))) = \mathcal{F} (F(-\mu)) = \int_{-\infty}^{\infty} F(-\mu) e^{-j 2 \pi t \mu} \, d\mu = \int_{-\infty}^{\infty} F(\mu) e^{j 2 \pi t \mu} \, d\mu = f(t)
+\]
+
+Therefore,
+\[
+\mathcal{F} (\mathcal{F} (\mathcal{F} (\mathcal{F} ( f(t) )))) = f(t)
+\]
+\\ \\
+Alternately, using the result $\mathcal{F} (\mathcal{F} (f(t))) = f(-t)$, we can directly conclude that:
+\[
+\mathcal{F} (\mathcal{F} (\mathcal{F} (\mathcal{F} ( f(t) )))) = \mathcal{F} (\mathcal{F} ( f(-t) )) = f(- (-t)) = f(t)
+\]
+
+\newpage
+
+\textbf{Practical Use of $\mathcal{F}(\mathcal{F}(f(t))) = f(-t)$ is as follows:}
+
+Applying Fourier Transform to a function f(t) twice, we obtain $\mathcal{F}(\mathcal{F}(f(t))) = f(-t)$ i.e, a time-reversed version of the original function.
+\\\\
+If the function is even, i.e., $f(t) = f(-t)$, then $\mathcal{F}(\mathcal{F}(f(t))) = f(-t) = f(t)$:
+In case of even functions, we can skip the part of computing the Fourier transform two times, since the double Fourier transform returns the original function. This is particularly useful for even functions such as Gaussian functions and cosines.
+\\\\
+For certain odd functions, the double Fourier transform results in the negated function, and this property can be leveraged in applications such as signal processing or when analyzing waveforms involving time-reversal symmetry.
+\\\\
+Consider the Gaussian function $f(t) = e^{-t^2}$, which is even, i.e., $f(t) = f(-t)$. Knowing that $\mathcal{F}(f(t))$ is also Gaussian, we can use $\mathcal{F}(\mathcal{F}(f(t))) = f(t)$ to immediately conclude that applying the Fourier transform twice returns the same function.
+
+
+\end{enumerate}
+
+\end{document}

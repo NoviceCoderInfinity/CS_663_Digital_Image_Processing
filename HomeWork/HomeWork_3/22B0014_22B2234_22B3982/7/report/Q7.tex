@@ -1,0 +1,195 @@
+\documentclass{article}
+\usepackage{helvet}
+
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{physics}
+
+
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\title{Question 7: Assignment 3: CS 663, Fall 2024}
+\author{
+\IEEEauthorblockN{
+    \begin{tabular}{cccc}
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Amitesh Shekhar\\
+            IIT Bombay\\
+            22b0014@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Anupam Rawat\\
+            IIT Bombay\\
+            22b3982@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Toshan Achintya Golla\\
+            IIT Bombay\\
+            22b2234@iitb.ac.in
+        \end{minipage} \\
+        \\ 
+    \end{tabular}
+}
+}
+
+\date{September 24, 2024}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{ulem,graphicx}
+\usepackage[margin=0.5in]{geometry}
+
+\begin{document}
+\maketitle
+
+\\
+
+\begin{enumerate}
+\item 
+Consider the partial differential equation \( \frac{\partial I}{\partial t} = c \left( \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2} \right) \)
+where c is some non-negative constant. This is the isotropic heat equation. Using the differentiation theorem in Fourier transforms, prove that running this PDE on an image I is equivalent to convolving it with a Gaussian of zero mean and appropriate standard deviation. What is the value of the standard deviation? You will also need to use the result that the Fourier transform of a Gaussian is also a Gaussian. [15 points] \textsf{[12+3=15 points]}
+\\
+    \makebox[0pt][l]{\hspace{-7pt}\textit{Soln:}} % Aligns "Answer:" to the left
+\\The heat equation is given as: 
+\[
+    \frac{\partial I}{\partial t} = c \left( \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2} \right)
+\]
+We can consider the image to be a function of x, y and t i.e., I(x, y, t), something like a video clip. Let's assume the 2D Fourier Transform of the image to be $I_F$(u, v, t). We can ignore t, because it doesn't come in the equation of the Fourier Transform. The original equation therefore becomes:
+\[
+    \frac{\partial I_F(u, v, t)}{\partial t} = c \left( \mathcal{F} \left( \frac{\partial^2 I(x, y, t)}{\partial x^2}\right)+ \mathcal{F} \left( \frac{\partial^2 I(x, y, t)}{\partial y^2} \right) \right)
+\]
+Simplifying the Right Hand Side of the Equation by using Differentiation Theorem, we get:
+\[
+    \mathcal{F}\left(\frac{\partial^2 I(x, y, t)}{\partial x^2}\right) = -(2 \pi u)^2 I_F(u, v, t) = - 4\pi^2u^2 I_F(u, v, t)
+\]
+\[
+    \mathcal{F}\left(\frac{\partial^2 I(x, y, t)}{\partial y^2}\right) = -(2 \pi v)^2 I_F(u, v, t) = - 4\pi^2v^2 I_F(u, v, t)
+\]
+
+Thus the modified heat equation in context of image becomes:
+\[
+    \frac{\partial I_F(u, v, t)}{\partial t} = -4\pi^2c(u^2 + v^2)\cdot I_F(u, v, t)
+\]
+This PDE can be expressed in the solution form as below:
+\[
+    I_F(u, v, t) = I_F(u, v, 0)\cdot\exp{-4\pi^2ct(u^2+v^2)}
+\]
+We can use another variable H(u, v, t) in place of the exponential term.
+\[
+    I_F(u, v, t) = I_F(u, v, 0)\cdot H(u, v, t)
+\]
+This can be expressed in the time domain as:
+\[
+    f(x, y, t) = f(x, y, 0) \star h(x, y, t)
+\]
+That is the solution in domain at time t is the convolution of solution at time (t = 0) and h(x, y, t), which is the inverse Fourier transform of H(u, v, t). Therefore, h(x, y, t) can be computed as:
+\[
+    \mathcal{F}^{-1}(H(u, v, t)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} H(u, v, t) \exp{2\pi j (ux + vy)} \, du \, dv
+\]
+\[
+    \mathcal{F}^{-1}(H(u, v, t)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \exp{-4\pi^2ct(u^2+v^2)} \exp{2\pi j (ux + vy)} \, du \, dv
+\]
+Separating the variables. \\
+(From here on, we'll be taking inspiration from the proof of "Fourier of a Gaussian yields a Gaussian")
+\[
+    \mathcal{F}^{-1}(H(u, v, t)) = \left(\int_{-\infty}^{\infty} \exp{-4\pi^2ctu^2}\, \exp{2\pi jux}\,  du \right) \left(\int_{-\infty}^{\infty} \exp{-4\pi^2ctv^2}\, \exp{2\pi jvy}\,  dv \right)
+\]
+\[
+    \mathcal{F}^{-1}(H(u, v, t)) = \left(\int_{-\infty}^{\infty} \exp{-4\pi^2ct \left(u^2 - \frac{jux}{2\pi c t}\right)}\,  du \right) \left(\int_{-\infty}^{\infty} \exp{-4\pi^2ct \left(v^2 - \frac{jvy}{2\pi c t}\right)}\,  dv \right)
+\]
+Completing the squares, we get:
+\begin{multline*}
+    \mathcal{F}^{-1}(H(u, v, t)) = \left( \int_{-\infty}^{\infty} 
+    \exp{ -4\pi^2ct \left( \left(u - \frac{jx}{4\pi c t}\right)^2 
+    - \left( \frac{jx}{4\pi ct} \right)^2 \right) } du \right) \\
+    \times \left( \int_{-\infty}^{\infty} 
+    \exp { -4\pi^2ct \left( \left(v - \frac{jy}{4\pi c t}\right)^2 
+    - \left( \frac{jy}{4\pi ct} \right)^2 \right) } dv \right)
+\end{multline*}
+\begin{multline*}
+    \mathcal{F}^{-1}(H(u, v, t)) = \left( \int_{-\infty}^{\infty} 
+    \exp { -4\pi^2ct \cdot \left(u - \frac{jx}{4\pi c t}\right)^2 
+    + 4\pi^2ct \cdot \left( \frac{jx}{4\pi ct} \right)^2 } du \right) \\
+    \times \left( \int_{-\infty}^{\infty} 
+    \exp { -4\pi^2ct \cdot \left(v - \frac{jy}{4\pi c t}\right)^2 
+    + 4\pi^2ct \cdot \left( \frac{jy}{4\pi ct} \right)^2 } dv \right)
+\end{multline*}
+\begin{multline*}
+    \mathcal{F}^{-1}(H(u, v, t)) = \left( \int_{-\infty}^{\infty} 
+    \exp { -\left(2\pi\sqrt{ct} \cdot u - 2\pi\sqrt{ct} \cdot \frac{jx}{4\pi c t}\right)^2 
+    + \cdot \left( 2\pi\sqrt{ct} \cdot \frac{jx}{4\pi ct} \right)^2 } du \right) \\
+    \times \left( \int_{-\infty}^{\infty} 
+    \exp { -\left(2\pi\sqrt{ct}v - 2\pi\sqrt{ct}\cdot\frac{jy}{4\pi c t}\right)^2 
+    + \left( 2\pi\sqrt{ct}\cdot\frac{jy}{4\pi ct} \right)^2 } dv \right)
+\end{multline*}
+\begin{multline*}
+    \mathcal{F}^{-1}(H(u, v, t)) = \left( \int_{-\infty}^{\infty} 
+    \exp { -\left(2\pi\sqrt{ct} \cdot u - \frac{jx}{2\sqrt{ct}}\right)^2 
+    + \left( \frac{jx}{2\sqrt{ct}} \right)^2 } du \right) \\
+    \times \left( \int_{-\infty}^{\infty} 
+    \exp { -\left(2\pi\sqrt{ct}\cdot v - \frac{jy}{2\sqrt{ct}}\right)^2 
+    + \left( \frac{jy}{2\sqrt{ct}} \right)^2 } dv \right)
+\end{multline*}
+\begin{multline*}
+    \mathcal{F}^{-1}(H(u, v, t)) = \exp{\left( \frac{jx}{2\sqrt{ct}} \right)^2} \times \left( \int_{-\infty}^{\infty} 
+    \exp { -\left(2\pi\sqrt{ct} \cdot u - \frac{jx}{2\sqrt{ct}}\right)^2} du \right) \\
+    \times \exp {\left( \frac{jy}{2\sqrt{ct}} \right)^2} \times \left( \int_{-\infty}^{\infty} 
+    \exp { -\left(2\sqrt{ct} \cdot v - \frac{jy}{2\sqrt{ct}}\right)^2} dv \right)
+\end{multline*}
+\begin{multline*}
+    \mathcal{F}^{-1}(H(u, v, t)) = \exp{-\frac{x^2 + y^2}{4ct}} \times \left( \int_{-\infty}^{\infty} 
+    \exp { -\left(2\pi\sqrt{ct} \cdot u - \frac{jx}{2\sqrt{ct}}\right)^2} du \right) \\
+    \times \left( \int_{-\infty}^{\infty} 
+    \exp { -\left(2\pi\sqrt{ct} \cdot v - \frac{jy}{2\sqrt{ct}}\right)^2} dv \right)
+\end{multline*}
+Substituting m = $2\pi u\sqrt{ct} - \frac{jx}{2\sqrt{ct}}$ and n = $2\pi v\sqrt{ct} - \frac{jy}{2\sqrt{ct}}$. We therefore have,
+\[
+    dm = 2 \pi \sqrt{ct} \, du
+\]
+\[
+    dn = 2 \pi \sqrt{ct} \, dv
+\]
+
+Thus the above equation for computing h(x, y, t) becomes
+\[
+    \mathcal{F}^{-1}(H(u, v, t)) = \exp{-\frac{x^2 + y^2}{4ct}} \times \left( \int_{-\infty}^{\infty} 
+    \frac{\exp(-m^2)}{2 \pi \sqrt{ct}} dm \right) \times \left( \int_{-\infty}^{\infty} 
+    \frac{\exp(-n^2)}{2 \pi \sqrt{ct}} dn \right)
+\]
+Since, we know that $\int_{-\infty}^{\infty}exp(-x^2) dx = \sqrt{\pi}$, we can resolve the above equation into:
+\[
+    \mathcal{F}^{-1}(H(u, v, t)) = \exp{-\frac{x^2 + y^2}{4ct}} \times \frac{\sqrt{\pi}}{2 \pi \sqrt{ct}} \times \frac{\sqrt{\pi}}{2 \pi \sqrt{ct}} = \frac{1}{4 \pi ct}\cdot\exp{-\frac{x^2 + y^2}{4ct}} = h(x, y, t)
+\]
+We know that equation of a standard gaussian in 2D is given as,
+\[
+    g(x, y) = \frac{1}{2\pi\sigma^2} \cdot \exp{-\frac{(x - \mu_x)^2 + (y - \mu_y)^2}{2\sigma^2}}
+\]
+Taking mean as zero, it reduces to,
+\[
+    g(x, y) = \frac{1}{2\pi\sigma^2} \cdot \exp{-\frac{x^2 + y^2}{2\sigma^2}}
+\]
+Hence proved that running this PDE on an image I is equivalent to convolving the value of I at time t = 0 with a Gaussian of zero mean and some standard deviation. \\ \\ 
+
+Comparing the above equation of gaussian in 2D with the obtained form for h(x, y, t), we can say that standard deviation, $\sigma = \sqrt{2ct}$ increases over time. Eventually, as $t \to \infty$, the image becomes a constant value, similar to the way heat distribution reaches a constant value over time.
+
+\end{enumerate}
+
+\end{document}

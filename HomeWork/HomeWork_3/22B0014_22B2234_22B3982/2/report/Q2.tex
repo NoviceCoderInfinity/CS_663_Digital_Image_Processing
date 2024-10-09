@@ -1,0 +1,228 @@
+\documentclass{article}
+\usepackage{helvet}
+
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{physics}
+
+
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\title{Question 2: Assignment 3: CS 663, Fall 2024}
+\author{
+\IEEEauthorblockN{
+    \begin{tabular}{cccc}
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Amitesh Shekhar\\
+            IIT Bombay\\
+            22b0014@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Anupam Rawat\\
+            IIT Bombay\\
+            22b3982@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Toshan Achintya Golla\\
+            IIT Bombay\\
+            22b2234@iitb.ac.in
+        \end{minipage} \\
+        \\ 
+    \end{tabular}
+}
+}
+
+\date{September 24, 2024}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fdsymbol}
+\usepackage{bbding}
+\usepackage{fontawesome}
+\usepackage{pifont}
+\usepackage{hyperref}
+\usepackage{ulem,graphicx}
+\usepackage[margin=0.5in]{geometry}
+
+\begin{document}
+\maketitle
+
+\\
+
+\begin{enumerate}
+\item 
+Derive the 2D Fourier transform of the correlation of two continuous 2D signals in the continuous domain.
+Repeat the same for the 2D DFT of two 2D discrete signals. \textsf{[10 points]}
+\\
+    \makebox[0pt][l]{\hspace{-7pt}\textit{Soln:}} % Aligns "Answer:" to the left
+\\
+The Correlation Theorem states that:
+
+\[
+f(x, y) \text{\ding{73}} h(x, y) \Longleftrightarrow F^*(u, v) H(u, v)
+\]
+\[
+f^*(x, y) h(x, y) \Longleftrightarrow F(u, v) \text{\ding{73}} H(u, v)
+\]
+whereas, the \textbf{correlation operation for continous domain} is given as:
+\[
+f(x, y) \text{\ding{73}} h(x, y) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f^*(m, n) \cdot h(x + m, y + n) \cdot dm \cdot dn
+\]
+The \textit{Fourier Transform of the convolution of two 2D functions f(x, y) and h(x, y) is given as}:
+\[
+   F(f(x, y) \text{\ding{73}} h(x, y)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \left( \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f^*(m, m) h(x + m, y + n) \, dm \, dn \right) \exp(-2 \pi j (ux + vy)) \, dx \, dy
+\]
+\[
+   F(f(x, y) \text{\ding{73}} h(x, y)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f^*(m, m) \left( \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} h(x + m, y + n) \, \exp(-2 \pi j (ux + vy)) \, dx \, dy \right) \, dm \, dn
+\]
+Let $\tilde{x}$ = x + m, $\tilde{y}$ = y + n. Substituting them accordingly in the inner integral, we get:
+\[
+   F(f(x, y) \text{\ding{73}} h(x, y)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f^*(m, m) \left( \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} h(\tilde{x}, \tilde{y}) \, \exp(-2 \pi j (u(\tilde{x} - m) + v(\tilde{y} - n))) \, d\tilde{x} \, d\tilde{y} \right) \, dm \, dn
+\]
+\[
+   F(f(x, y) \text{\ding{73}} h(x, y)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f^*(m, m) \, \exp(2 \pi j (um + vn)) \, \left( \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} h(\tilde{x}, \tilde{y}) \, \exp(-2 \pi j (u\tilde{x} + v\tilde{y})) \, d\tilde{x} \, d\tilde{y} \right) \, dm \, dn
+\]
+The inner integral of h($\tilde{x}$, $\tilde{y}$) evaluates to its Fourier Transform H(u, v):
+\[
+   F(f(x, y) \text{\ding{73}} h(x, y)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f^*(m, m) \, \exp(2 \pi j (um + vn)) \, H(u, v) \, dm \, dn
+\]
+\[
+   F(f(x, y) \text{\ding{73}} h(x, y)) = H(u, v) \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f^*(m, m) \, \exp(2 \pi j (um + vn)) \, dm \, dn
+\]
+Since, we know that Fourier Transform a 2D function g(x, y) is given by:
+\[
+   F(g(x, y))(u, v) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} g(x, y) \, \exp(-2 \pi j (ux + vy)) \, dx \, dy
+\]
+\[
+   F^*(g(x, y))(u, v) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} g^*(x, y) \, \exp(+2 \pi j (ux + vy)) \, dx \, dy
+\]
+Thus, Fourier Transform of the correlation of f(x, y) and h(x, y) becomes: 
+\[
+   F(f(x, y) \text{\ding{73}} h(x, y)) = F^*(u, v) H(u, v)
+\]
+This proves the first part of the correlation theorem for continuous domain.
+
+\newpage
+
+\textit{The inverse Fourier Transform of correlation of F(u, v) and H(u, v) is given as}:
+\[
+    F^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \left( \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} F^*(m, n) \cdot H(u + m, v + n) \cdot dm \cdot dn \right) \exp(2 \pi j (ux + vy)) \, du \, dv
+\]
+\[
+    F^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} F^*(m, n) \left( \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} H(u + m, v + n) \exp(2 \pi j (ux + vy)) \cdot du \cdot dv \right) \, dm \, dn
+\]
+Let $\tilde{u}$ = u + m and $\tilde{v}$ = v + n. Substituting it in the inner integral, we get:
+\[
+    F^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} F^*(m, n) \left( \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} H(\tilde{u}, \tilde{v}) \exp(2 \pi j ((\tilde{u} - m)x + (\tilde{v} - n)y)) \cdot d\tilde{u} \cdot d\tilde{v} \right) \, dm \, dn
+\]
+\[
+    F^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} F^*(m, n) \exp(- 2 \pi j (mx + ny)) \left( \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} H(\tilde{u}, \tilde{v}) \exp(2 \pi j (\tilde{u}x + \tilde{v}y)) \cdot d\tilde{u} \cdot d\tilde{v} \right) \, dm \, dn
+\]
+The inner integral evaluates to the inverse Fourier transform of H($\tilde{u}$, $\tilde{v}$), i.e. h(x, y):
+\[
+    F^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} F^*(m, n) \exp(- 2 \pi j (mx + ny)) h(x, y) \, dm \, dn
+\]
+\[
+    F^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = h(x, y) \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} F^*(m, n) \exp(- 2 \pi j (mx + ny)) \, dm \, dn
+\]
+The inverse Fourier Transform g(x, y) of the function G(u, v) is given by:
+\[
+    g(x, y) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} G(m, n) \exp(2 \pi j (mx + ny)) \, dm \, dn
+\]
+\[
+    g^*(x, y) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} G^*(m, n) \exp(-2 \pi j (mx + ny)) \, dm \, dn
+\]
+
+The inverse Fourier Transform of correlation of F(u, v) and H(u, v) is given as:
+\[
+    F^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = f^*(x, y) h(x, y)
+\]
+
+
+Next, we compute the same result for Discrete signals domain:
+The Correlation Theorem states that:
+
+\[
+f(x, y) \text{\ding{73}} h(x, y) \Longleftrightarrow F^*(u, v) H(u, v)
+\]
+\[
+f^*(x, y) h(x, y) \Longleftrightarrow F(u, v) \text{\ding{73}} H(u, v)
+\]
+whereas, the \textbf{correlation operation for discrete domain} is given as:
+\[
+f(x, y) \text{\ding{73}} h(x, y) = \sum_{m=0}^{M-1} \sum_{n=0}^{N-1} f^*(m, n) \cdot h(x + m, y + n)
+\]
+The \textit{Fourier Transform of the correlation of two signals f(x, y) and h(x, y)} is:
+\[
+\mathcal{F}(f(x, y) \text{\ding{73}} h(x, y))(u, v) = \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} \left( \sum_{m=0}^{M-1} \sum_{n=0}^{N-1} f^*(m, n) \cdot h(x + m, y + n) \right) \exp(-2 \pi j (ux/N + vy/M)) 
+\]
+\[
+\mathcal{F}(f(x, y) \text{\ding{73}} h(x, y))(u, v) = \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} f^*(m, n) \left( \sum_{m=0}^{M-1} \sum_{n=0}^{N-1} h(x + m, y + n) \exp(-2 \pi j (ux/N + vy/M)) \right)
+\]
+Let $\tilde{x}$ = x + m and $\tilde{y}$ = y + n. Substituting this in the above equation, we get:
+\[
+\mathcal{F}(f(x, y) \text{\ding{73}} h(x, y))(u, v) = \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} f^*(m, n) \left( \sum_{m=0}^{M-1} \sum_{n=0}^{N-1} h(\tilde{x}, \tilde{y}) \exp(-2 \pi j (u(\tilde{x} - m)/N + v(\tilde{y} - n)/M)) \right)
+\]
+\[
+\mathcal{F}(f(x, y) \text{\ding{73}} h(x, y))(u, v) = \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} f^*(m, n) \exp(2 \pi j (um/N + vn/M)) \left( \sum_{m=0}^{M-1} \sum_{n=0}^{N-1} h(\tilde{x}, \tilde{y}) \exp(-2 \pi j (u\tilde{x}/N + v\tilde{y}/M)) \right)
+\]
+\newpage
+The inner summation over h($\tilde{x}$, $\tilde{y}$) evaluates to the Fourier Transform of h(x, y) which is H(u, v):
+\[
+\mathcal{F}(f(x, y) \text{\ding{73}} h(x, y))(u, v) = \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} f^*(m, n) \exp(2 \pi j (um/N + vn/M)) H(u, v)
+\]
+\[
+\mathcal{F}(f(x, y) \text{\ding{73}} h(x, y))(u, v) = H(u, v) \sum_{x=0}^{M-1} \sum_{y=0}^{N-1} f^*(m, n) \exp(2 \pi j (um/N + vn/M))
+\]
+Now the summation evaluates to the Fourier Transform of f(m, n) which evaluates to $F^*(u, v)$:
+\[
+\mathcal{F}(f(x, y) \text{\ding{73}} h(x, y))(u, v) = F^*(u, v) H(u, v)
+\]
+
+\textit{The inverse Fourier Transform of correlation of F(u, v) and H(u, v) is given as}:
+\[
+    \mathcal{F}^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \sum_{u=0}^{M-1} \sum_{v=0}^{N-1} \left( \sum_{u=0}^{M-1} \sum_{v=0}^{N-1} F^*(m, n) \cdot H(u + m, v + n) \right) \exp(2 \pi j (ux/M + vy/N))
+\]
+\[
+    \mathcal{F}^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \sum_{u=0}^{M-1} \sum_{v=0}^{N-1} F^*(m, n) \left( \sum_{u=0}^{M-1} \sum_{v=0}^{N-1} H(u + m, v + n) \exp(2 \pi j (ux / M+ vy/N)) \right)
+\]
+
+Let $\tilde{u}$ = u + m and $\tilde{v}$ = v + n. Substituting it in the inner summation, we get:
+\[
+    \mathcal{F}^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \sum_{u=0}^{M-1} \sum_{v=0}^{N-1} F^*(m, n) \left( \sum_{\tilde{u}=0}^{M-1} \sum_{\tilde{v}=0}^{N-1} H(\tilde{u}, \tilde{v}) \exp(2 \pi j ((\tilde{u} - m)x/M + (\tilde{v} - n)y/N)) \right)
+\]
+\[
+    \mathcal{F}^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \sum_{u=0}^{M-1} \sum_{v=0}^{N-1} F^*(m, n) \exp(-2 \pi j (mx/M + ny/N)) \left( \sum_{\tilde{u}=0}^{M-1} \sum_{\tilde{v}=0}^{N-1} H(\tilde{u}, \tilde{v}) \exp(2 \pi j (\tilde{u}x/M + \tilde{v}y/N)) \right)
+\]
+The inner summation evaluates to the inverse fourier transform of H($\tilde{u}$, $\tilde{v}$), i.e., h(x, y)
+\[
+    \mathcal{F}^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = \sum_{u=0}^{M-1} \sum_{v=0}^{N-1} F^*(m, n) \exp(-2 \pi j (mx/M + ny/N)) \, h(x, y)
+\]
+\[
+    \mathcal{F}^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = h(x, y) \sum_{u=0}^{M-1} \sum_{v=0}^{N-1} F^*(m, n) \exp(-2 \pi j (mx/M + ny/N))
+\]
+The sumamtion evaluates to the conjugate of f(x, y):
+\[
+    \mathcal{F}^{-1}(F(u, v) \text{\ding{73}} H(u, v)) = f^*(x, y) \, h(x, y)
+\]
+
+Hence the correlation theorem is proved for both continous and discrete domains in 2D.
+\end{enumerate}
+\end{document}
