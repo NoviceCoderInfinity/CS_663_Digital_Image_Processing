@@ -1,0 +1,207 @@
+\documentclass{article}
+\usepackage{helvet}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{microtype} % Prevents overfull hboxes by better text wrapping
+\geometry{margin=1in}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
+% Define colors for code syntax highlighting
+\definecolor{codeblue}{rgb}{0.13, 0.13, 0.7}
+\definecolor{codegreen}{rgb}{0, 0.5, 0}
+\definecolor{codegray}{rgb}{0.5, 0.5, 0.5}
+\definecolor{codepurple}{rgb}{0.58, 0, 0.82}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{white},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Define colors
+\definecolor{primary}{RGB}{0, 102, 204} % Blue color
+\definecolor{IITBBlue}{RGB}{0, 51, 102} % IIT Bombay's signature blue
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{physics}
+
+
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\title{Question 3: Assignment 4: CS 663, Fall 2024}
+\author{
+\IEEEauthorblockN{
+    \begin{tabular}{cccc}
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Amitesh Shekhar\\
+            IIT Bombay\\
+            22b0014@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Anupam Rawat\\
+            IIT Bombay\\
+            22b3982@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Toshan Achintya Golla\\
+            IIT Bombay\\
+            22b2234@iitb.ac.in
+        \end{minipage} \\
+        \\ 
+    \end{tabular}
+}
+}
+
+\date{October 22, 2024}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{ulem,graphicx}
+\usepackage[margin=0.5in]{geometry}
+
+\begin{document}
+\maketitle
+
+\\
+
+\begin{enumerate}
+    \item The aim of this exercise is to help you understand the mathematics of SVD more deeply. Do as directed: \textsf{[30 points -- see split-up below]}
+    
+    \begin{enumerate}
+        \item Argue that the non-zero singular values of a matrix $\boldsymbol{A}$ are the square-roots of the eigenvalues of $\boldsymbol{AA}^T$ or $\boldsymbol{A}^T\boldsymbol{A}$. (Make arguments for both) \textsf{[3 points]}
+        \item Show that the squared Frobenius norm of a matrix is equal to the sum of squares of its singular values. \textsf{[3 points]}
+        \item A students tries to obtain the SVD of a $m \times n$ matrix $\boldsymbol{A}$ using eigendecomposition. For this, the student computes $\boldsymbol{A}^T \boldsymbol{A}$ and assigns the eigenvectors of $\boldsymbol{A}^T \boldsymbol{A}$ (computed using the \texttt{eig} routine in MATLAB) to be the matrix $\boldsymbol{V}$ consisting of the right singular vectors of $\boldsymbol{A}$. Then the student also computes $\boldsymbol{A} \boldsymbol{A}^T$ and assigns the eigenvectors of $\boldsymbol{A}\boldsymbol{A}^T$ (computed using the \texttt{eig} routine in MATLAB) to be the matrix $\boldsymbol{U}$ consisting of the left singular vectors of $\boldsymbol{A}$. Finally, the student assigns the non-negative square-roots of the eigenvalues (computed using the \texttt{eig} routine in MATLAB) of either $\boldsymbol{A}^T \boldsymbol{A}$ or $\boldsymbol{A} \boldsymbol{A}^T$ to be the diagonal matrix $\boldsymbol{S}$ consisting of the singular values of $\boldsymbol{A}$. He/she tries to check his/her code and is surprised to find that $\boldsymbol{USV}^T$ is not equal to $\boldsymbol{A}$. Why could this be happening? What processing (s)he do to the computed \emph{eigenvectors} of $\boldsymbol{A}^T \boldsymbol{A}$ and/or $\boldsymbol{A}\boldsymbol{A}^T$ in order rectify this error? (Note: please try this on your own in MATLAB.) \textsf{[8 points]}
+        
+        \item Consider a matrix $\boldsymbol{A}$ of size $m \times n, m \leq n$. Define $\boldsymbol{P} = \boldsymbol{A}^T \boldsymbol{A}$ and $\boldsymbol{Q} = \boldsymbol{A}\boldsymbol{A}^T$. (Note: all matrices, vectors and scalars involved in this question are real-valued). \textsf{[4+4+4+4=16 points]}
+
+        \begin{enumerate}
+            \item Prove that for any vector $\boldsymbol{y}$ with appropriate number of elements, we have $\boldsymbol{y}^t \boldsymbol{Py} \geq 0$. Similarly show that $\boldsymbol{z}^t \boldsymbol{Qz} \geq 0$ for a vector $\boldsymbol{z}$ with appropriate number of elements. Why are the eigenvalues of $\boldsymbol{P}$ and $\boldsymbol{Q}$ non-negative?
+            \item If $\boldsymbol{u}$ is an eigenvector of $\boldsymbol{P}$ with eigenvalue $\lambda$, show that $\boldsymbol{Au}$ is an eigenvector of $\boldsymbol{Q}$ with eigenvalue $\lambda$. If $\boldsymbol{v}$ is an eigenvector of $\boldsymbol{Q}$ with eigenvalue $\mu$, show that $\boldsymbol{A}^T\boldsymbol{v}$ is an eigenvector of $\boldsymbol{P}$ with eigenvalue $\mu$. What will be the number of elements in $\boldsymbol{u}$ and $\boldsymbol{v}$?
+            
+            \item If $\boldsymbol{v}_i$ is an eigenvector of $\boldsymbol{Q}$ and we define $\boldsymbol{u}_i \triangleq \dfrac{\boldsymbol{A}^T \boldsymbol{v}_i}{\|\boldsymbol{A}^T \boldsymbol{v}_i\|_2}$. Then prove that there will exist some real, non-negative $\gamma_i$ such that $\boldsymbol{Au}_i = \gamma_i \boldsymbol{v}_i$.
+            
+            \item It can be shown that $\boldsymbol{u}^T_i \boldsymbol{u}_j = 0$ for $i \neq j$ and likewise $\boldsymbol{v}^T_i \boldsymbol{v}_j = 0$ for $i \neq j$ for correspondingly distinct eigenvalues. (You did this in HW4 where you showed that the eigenvectors of symmetric matrices are orthonormal.) Now, define $\boldsymbol{U} = [\boldsymbol{v}_1 | \boldsymbol{v}_2 | \boldsymbol{v}_3 | ...|\boldsymbol{v}_m]$ and $\boldsymbol{V} = [\boldsymbol{u}_1 | \boldsymbol{u}_2 | \boldsymbol{u}_3 | ... |\boldsymbol{u}_m]$. Now show that $\boldsymbol{A} = \boldsymbol{U} \boldsymbol{\Gamma} \boldsymbol{V}^T$ where $\boldsymbol{\Gamma}$ is a diagonal matrix containing the non-negative values $\gamma_1, \gamma_2, ..., \gamma_m$. With this, you have just established the existence of the singular value decomposition of any matrix $\boldsymbol{A}$. 
+        \end{enumerate}
+    \end{enumerate}
+    
+    \\
+        \makebox[0pt][l]{\hspace{-7pt}\textit{Soln:}} % Aligns "Answer:" to the left
+    \\
+    
+    \begin{enumerate}
+        \item We know that SVD of matrix \textbf{A} is given by $\textbf{A} = \textbf{U} \textbf{S} \textbf{V}^T$. \textbf{S} is a diagonal matrix that contains eigenvalues of \textbf{A}. Similarly, the $\textbf{A}^T$ is given by $\textbf{A}^T$ = \textbf{V} $\textbf{S}^T$ \textbf{A}
+        Hence, we have:
+        \[
+            \textbf{A}\cdot \textbf{A}^T = \textbf{U} \textbf{S} \textbf{V}^T \cdot \textbf{V} \textbf{S}^T \textbf{U}^T
+        \]
+        \[
+            \textbf{A}^T \cdot \textbf{A} = \textbf{V} \textbf{S}^T \textbf{U}^T \cdot \textbf{U} \textbf{S} \textbf{V}^T
+        \]
+        Since, \textbf{V} and \textbf{U} both are orthonormal and \textbf{S} is a diagonal matrix, $\textbf{S}^T = \textbf{S}$. Thus the above equations resolve to:
+        \[
+            \textbf{A}\cdot \textbf{A}^T = \textbf{U} \textbf{S}^2 \textbf{U}^T
+        \]
+        \[
+            \textbf{A}^T\cdot \textbf{A} = \textbf{V} \textbf{S}^2 \textbf{V}^T
+        \]
+        And the \textbf{S} is the square root of the eigenvalues of $\textbf{A}\cdot \textbf{A}^T$ or $\textbf{A}^T\cdot \textbf{A}$, which proves the statement.
+        \item We know that the Frobenius norm of a matrix \textbf{A} is given by:
+        \begin{equation}
+            \|\textbf{A}\|_F = \sqrt{\sum_{i=1}^{m} \sum_{j=1}^{n} a_{ij}^2}
+        \end{equation}
+        The singular value decomposition of matrix \textbf{A} is given by $\textbf{A} = \textbf{U} \textbf{S} \textbf{V}^T$. The Frobenius norm of matrix \textbf{A} can be written as:
+        \begin{equation}
+            \|\textbf{A}\|_F = \|\textbf{U} \textbf{S} \textbf{V}^T\|_F = \|\textbf{S}\|_F = \sqrt{\sum_{i=1}^{r} \sigma_i^2}
+        \end{equation}
+        Thus, we have shown that the squared Frobenius norm of a matrix is equal to the sum of squares of its singular values.
+        \item We must note that U is obtained from the eigenvectors of $\boldsymbol{A} \boldsymbol{A}^T$ and V is obtained from the eigenvectors of $\boldsymbol{A}^T\boldsymbol{A}$. If we independently use eig for obtaining U and V, then it can lead to inconsistencies in the signs, due to which A will not be equal to the matrix product $\boldsymbol{US}\boldsymbol{V}^T$. This inconsistency occurs because of the fact that if a vector $\boldsymbol{k}$ is a eigenvector of matrix A with eigenvalue $\lambda$, then the vector $\boldsymbol{-k}$ is also a eigenvector of matrix A with same eigenvalue $\lambda$. \\ A simple way to solve this problem is to mark out those $\boldsymbol{u}$,$\boldsymbol{v}$ pairs which are having a sign inconsistency and then multiply either the $\boldsymbol{u}$ or $\boldsymbol{v}$ vector by -1 in all such cases.
+        \item 
+        % Consider a matrix $\boldsymbol{A}$ of size $m \times n, m \leq n$. Define $\boldsymbol{P} = \boldsymbol{A}^T \boldsymbol{A}$ and $\boldsymbol{Q} = \boldsymbol{A}\boldsymbol{A}^T$. (Note: all matrices, vectors and scalars involved in this question are real-valued). \textsf{[4+4+4+4=16 points]}
+        \[
+            P = A^T A = V S^2 V^T
+        \]
+        \[
+            Q = AA^T = U S^2 U^T
+        \]
+        \begin{enumerate}
+            \item 
+            \[
+                \textbf{y}^T \textbf{P} \textbf{y} = \textbf{y}^T ( \textbf{A}^T \textbf{A} ) \textbf{y} = (\textbf{y}^T \textbf{A}^T) (\textbf{A} \textbf{y}) = (\textbf{A} \textbf{y})^T (\textbf{A} \textbf{y}) = || \textbf{A} \textbf{y} ||^2 \geq 0
+            \]
+            \[
+                \textbf{z}^T \textbf{Q} \textbf{z} = \textbf{z}^T ( \textbf{A} \textbf{A}^T ) \textbf{z} = (\textbf{z}^T \textbf{A}) (\textbf{A}^T \textbf{z}) = (\textbf{A}^T \textbf{z})^T (\textbf{A}^T \textbf{z}) = || \textbf{A}^T \textbf{z} ||^2 \geq 0
+            \]
+            P and Q are symmetric matrices and also, as above, $\textbf{y}^T \textbf{P} \textbf{y} \geq 0$ and $\textbf{z}^T \textbf{Q} \textbf{z} \geq 0$ for any arbitrary vectors $x$ and $y$. Thus, we can say that P and Q are positive semi-definite matrices. And since the eigenvalues of a positive semi-definite matrix are non-negative, we can say that eigenvalues of P and Q are non-negative.
+            
+            \item 
+            \[
+                \textbf{P} \textbf{u} = \textbf{A}^T \textbf{A} \textbf{u} = \textbf{$\lambda$} \textbf{u}
+            \]
+            \[
+                \textbf{Q} \cdot \textbf{Au} = \textbf{A} \textbf{A}^T \cdot \textbf{Au} = \textbf{A} ( \textbf{A}^T \textbf{Au} ) = \textbf{A} ( \lambda \textbf{u}) = \lambda \cdot \textbf{Au}
+            \]
+            Thus, we can say that \textbf{Au} is an eigenvector of \textbf{Q}, with corresponding eigenvalue as $\lambda$. \\ 
+            \[
+                \boldsymbol{Q} \boldsymbol{v} = \boldsymbol{AA}^T \cdot \boldsymbol{v} = \mu \boldsymbol{v}
+            \]
+            \[
+                \boldsymbol{P} \cdot \boldsymbol{A^Tv} = (\boldsymbol{A}^T \boldsymbol{A}) \cdot \boldsymbol{A^Tv} = \boldsymbol{A}^T \cdot (\boldsymbol{A A^T v}) = \boldsymbol{A}^T \cdot \mu \boldsymbol{v} = \mu \boldsymbol{A^T v}
+            \]
+            Thus, we can say that \textbf{$A^Tv$} is an eigenvector of \textbf{P}, with corresponding eigenvalue as $\mu$. \\ 
+            We know that $\boldsymbol{A}$ is a m$\times$n matrix, and $\boldsymbol{A}^T$ is a $n\times m$ matrix. Since, we are doing a product of $\boldsymbol{A}$ and $\boldsymbol{u}$, and $\boldsymbol{u}$ is a column vector, it must have \textbf{n} elements. Similarly, since we are doing a multiplication of $\boldsymbol{A^T}$ and $\boldsymbol{v}$, $\boldsymbol{v}$ must have \textbf{m} elements.
+            
+            \item Let $\lambda_i$ be the eigenvalue of the eigenvector $\boldsymbol{v_i}$ of the matrix $\boldsymbol{Q}$.
+            \[
+                \boldsymbol{Q} \boldsymbol{v_i} = \boldsymbol{AA}^T \boldsymbol{v_i} = \lambda_i \boldsymbol{v_i}
+            \]
+            \[
+                \boldsymbol{A} \boldsymbol{u_i} = \boldsymbol{A} \left( \frac{\boldsymbol{A}^T\boldsymbol{v_i}}{\|\boldsymbol{A}^T \boldsymbol{v}_i\|_2}\right) = \frac{\boldsymbol{A} \boldsymbol{A}^T \boldsymbol{v_i}}{\|\boldsymbol{A}^T \boldsymbol{v}_i\|_2} = \frac{\lambda_i \boldsymbol{v}_i }{\|\boldsymbol{A}^T \boldsymbol{v}_i\|_2}
+            \]
+            We define a scalar, $\gamma_i \triangleq \dfrac{\lambda_i}{\|\boldsymbol{A}^T \boldsymbol{v}_i\|_2}$. \\
+            Since $\boldsymbol{Q}$ is a positive semi-definite matrix, we can say for sure that $\lambda_i$ is real and non-negative eigenvalue, and since $\|\boldsymbol{A}^T \boldsymbol{v}_i\|_2$ is a norm of a vector (which is also non-negative), it follows that $\lambda_i$ is real, non-negative scalar. \\
+            Thus, we can say that $\boldsymbol{A}\boldsymbol{u}_i$ = $\lambda_i \boldsymbol{v}_i$.
+
+            
+            \item As proved above, we know that $\boldsymbol{A}\boldsymbol{u}_i$ = $\lambda_i \boldsymbol{v}_i$. Without loss of generality, taking m $\leq$ n, we can say that $\boldsymbol{A}\boldsymbol{u}_i$ = $\lambda_i \boldsymbol{v}_i$ for all $1 \leq i \leq m$, and $\boldsymbol{A}\boldsymbol{u}_i$ = 0 for all $m+1 \leq i \leq n$. This means that we can write the relation $\boldsymbol{AV = U\Gamma}$ such that $\boldsymbol{V}$ is an orthonormal matrix of order n$\times$n, $\boldsymbol{\Gamma}$ is a diagonal matrix of size m$\times$n having at most m non-zero values along the diagonal and U is an orthonormal matrix of size m$\times$m. Now, if we multiply $\boldsymbol{V}^T$ on both sides, then since $\boldsymbol{V}$ is orthonormal, we can say that $\boldsymbol{V}\boldsymbol{V}^T = I$. Thereby, we can conclude that $\boldsymbol{A} = \boldsymbol{U} \boldsymbol{\Gamma} \boldsymbol{V}^T$.
+        \end{enumerate}
+    \end{enumerate}
+    
+\end{enumerate}
+\end{document}
