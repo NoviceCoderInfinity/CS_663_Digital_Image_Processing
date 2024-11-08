@@ -1,0 +1,114 @@
+\documentclass{article}
+\usepackage{helvet}
+
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{physics}
+
+
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\title{Question 4: Assignment 5: CS 663, Fall 2024}
+\author{
+\IEEEauthorblockN{
+    \begin{tabular}{cccc}
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Amitesh Shekhar\\
+            IIT Bombay\\
+            22b0014@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Anupam Rawat\\
+            IIT Bombay\\
+            22b3982@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Toshan Achintya Golla\\
+            IIT Bombay\\
+            22b2234@iitb.ac.in
+        \end{minipage} \\
+        \\ 
+    \end{tabular}
+}
+}
+
+\date{November 07, 2024}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{ulem,graphicx}
+\usepackage[margin=0.5in]{geometry}
+
+\begin{document}
+\maketitle
+
+\\
+
+\begin{enumerate}
+\item Consider a $n \times n$ image $f(x,y)$ such that only $k \ll n^2$ elements in it are non-zero, where $k$ is known and the locations of the non-zero elements are also known. (a) How will you reconstruct such an image from a set of only $m$ different Discrete Fourier Transform (DFT) coefficients of known frequencies, where $m < n^2$? (b) What is the minimum value of $m$ that your method will allow? (c) Will your method work if $k$ is known, but the locations of the non-zero elements are unknown? Why (not)? \textsf{[10+5+5 = 20 points]}
+
+\makebox[0pt][l]{\hspace{-7pt}\textit{Soln:}} % Aligns "Answer:" to the left
+\\ We know that:-
+\begin{itemize}
+    \item The image is of size \( n \times n \), so it has \( n^2 \) pixels.
+    \item Only \( k \ll n^2 \) elements are non-zero.
+    \item We have \( m \) DFT coefficients (with \( m < n^2 \)) of known frequencies.
+    \item We need to determine the minimum value of \( m \) to reconstruct the image, given that the locations of the non-zero elements are:
+    \begin{itemize}
+        \item Known for part (a) and (b)
+        \item Unknown for part (c)
+    \end{itemize}
+\end{itemize}
+
+(a) Reconstructing the Image with Known Non-zero Locations : Since we know the exact locations of the non-zero elements in \( f(x, y) \), we can set up a system of linear equations that relates the DFT coefficients to these known non-zero values.
+\\
+The DFT of an image \( f(x, y) \) (where \( f \) is sparse) can be represented by a vector \( {F} \) of DFT coefficients, which is related to \( f \) through:
+\[
+{F}[u, v] = \sum_{x=0}^{n-1} \sum_{y=0}^{n-1} f(x, y) e^{-2\pi i \left( \frac{ux}{n} + \frac{vy}{n} \right)}
+\]
+for frequencies \( (u, v) \) in the Fourier domain.
+\\
+Let \( f_s \) denote the vector of the non-zero values in \( f(x, y) \), with \( |f_s| = k \). Because we know the locations of these \( k \) non-zero values, we only need to reconstruct the values at these locations.
+
+Let \( {F}_m \) be the vector of \( m \) DFT coefficients that we have measured.
+
+For each known frequency \( (u, v) \), we can write:
+\[
+{F}_m[i] = \sum_{j=1}^{k} f_s[j] e^{-2\pi i \left( \frac{u_i x_j}{n} + \frac{v_i y_j}{n} \right)}
+\]
+where \( (x_j, y_j) \) are the coordinates of the \( j \)-th non-zero element.
+
+This gives us a system of \( m \) linear equations in \( k \) unknowns (the values of \( f_s \) at the non-zero locations):
+\[
+A f_s = {F}_m
+\]
+where \( A \) is an \( m \times k \) matrix with entries \( A[i, j] = e^{-2\pi i \left( \frac{u_i x_j}{n} + \frac{v_i y_j}{n} \right)} \), and \( {F}_m \) is the known vector of DFT measurements.
+
+(b) Minimum Value of \( m \) : When m $\geq$ k, the system can be solved to determine the k non-zero elements of \( f_s \). This is because, to uniquely determine the \( k \) non-zero elements in \( f_s \), we need at least \( k \) independent equations. Therefore, the minimum value of \( m \) that allows reconstruction is: m = k. If we have $m > k$, then we have more equations than required, so the system is said to be \( f_s \). In such a case, the least squares solution minimizes the sum of the squared residuals (differences) between the actual values \( F_m \) and the values predicted by the model \( A f_s \) such that:
+\[
+\min_{f_s} \| F_m - A f_s \|^2
+\]
+This gives the best approximate solution for \( f_s \).
+\\\\
+(c) Reconstruction When Locations Are Unknown : If the locations of the non-zero elements are unknown, the problem becomes much more challenging. Because in such a case, we would need to simultaneously determine the locations and the values of the non-zero elements, which significantly increases the complexity of the reconstruction. Thus, \textbf{without knowing the locations}, the minimum number \( m \) typically increases due to the need to find both location and value information for the sparse components in \( f(x, y) \).\\
+In conclusion, the method we suggested will not be directly able to solve the problem. However, theoretically, we can come up with more advanced algorithms to reconstruct the image wherein the minimum value of m would be more in this case because, as explained above, we need to simultaneously determine the locations and the values of the non-zero elements
+\end{enumerate}
+\end{document}

@@ -1,0 +1,264 @@
+\documentclass{article}
+\usepackage{helvet}
+
+% \documentclass[conference]{ieeetran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{physics}
+
+
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\title{Question 2: Assignment 5: CS 663, Fall 2024}
+\author{
+\IEEEauthorblockN{
+    \begin{tabular}{cccc}
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Amitesh Shekhar\\
+            IIT Bombay\\
+            22b0014@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Anupam Rawat\\
+            IIT Bombay\\
+            22b3982@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Toshan Achintya Golla\\
+            IIT Bombay\\
+            22b2234@iitb.ac.in
+        \end{minipage} \\
+        \\ 
+    \end{tabular}
+}
+}
+
+\date{November 07, 2024}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fdsymbol}
+\usepackage{bbding}
+\usepackage{fontawesome}
+\usepackage{pifont}
+\usepackage{hyperref}
+\usepackage{ulem,graphicx}
+\usepackage[margin=0.5in]{geometry}
+
+\begin{document}
+\maketitle
+
+\\
+
+\begin{enumerate}
+    \item Suppose you are standing in a well-illuminated room with a large window, 
+    and you take a picture of the scene outside. The window undesirably acts as a semi-reflecting surface, 
+    and hence the picture will contain a reflection of the scene inside the room, besides the scene outside. 
+    While solutions exist for separating the two components from a single picture, 
+    here you will look at a simpler-to-solve version of this problem where you would take two pictures. 
+    The first picture $g_1$ is taken by adjusting your camera lens so that the scene outside ($f_1$) is in focus 
+    (we will assume that the scene outside has negligible depth variation when compared to the distance from the camera, 
+    and so it makes sense to say that the entire scene outside is in focus), and the reflection off the window surface ($f_2$) 
+    will now be defocussed or blurred.  This can be written as $g_1 = f_1 + h_2 * f_2$ where $h_2$ stands for the 
+    blur kernel that acted on $f_2$. The second picture $g_2$ is taken by focusing the camera onto the surface of the window, 
+    with the scene outside being defocussed. This can be written as $g_2 = h_1 * f_1 + f_2$ where $h_1$ is the 
+    blur kernel acting on $f_1$. Given $g_1$ and $g_2$, and assuming $h_1$ and $h_2$ are known, your task is to derive 
+    a formula to determine $f_1$ and $f_2$. Note that we are making the simplifying assumption that there was no relative 
+    motion between the camera and the scene outside while the two pictures were being acquired, and that there were 
+    no changes whatsoever to the scene outside or inside. Even with all these assumptions, you will notice something 
+    inherently problematic/unstable about the formula you will derive. What is it? \textsf{[8+7 = 15 points]}
+
+    \makebox[0pt][l]{\hspace{-7pt}\textit{Soln:}} % Aligns "Answer:" to the left
+\newline
+    We know that:
+    \[
+        g_1 = f_1 + h_2 * f_2
+    \]
+    \[
+        g_2 = h_1 * f_1 + f_2
+    \]
+    where $g_1$, $g_2$, $h_1$ and $h_2$ are known. \\
+    Taking the above equations in the frequency domain, we get:
+    \[
+        G_1 = F_1 + H_2 \cdot F_2
+    \]
+    \[
+        G_2 = H_1 \cdot F_1 + F_2
+    \]
+    where $G_1$, $G_2$, $H_1$ and $H_2$ are the DFTs of $g_1$, $g_2$, $h_1$ and $h_2$ respectively. \\
+
+    The above equation can be solved as:
+    \[
+        \begin{bmatrix}
+            G_1 \\
+            G_2
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            I & H_2 \\
+            H_1 & I
+        \end{bmatrix}
+        \begin{bmatrix}
+            F_1 \\
+            F_2
+        \end{bmatrix}
+    \]
+    \[
+        \begin{bmatrix}
+            F_1 \\
+            F_2
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            I & H_2 \\
+            H_1 & I
+        \end{bmatrix}^{-1}
+        \begin{bmatrix}
+            G_1 \\
+            G_2
+        \end{bmatrix}
+    \]
+    
+    \[
+        \begin{bmatrix}
+            F_1 \\
+            F_2
+        \end{bmatrix}
+        =
+        \frac{1}{I - H_1 \cdot H_2}
+        \begin{bmatrix}
+            I & -H_2 \\
+            -H_1 & I
+        \end{bmatrix}
+        \begin{bmatrix}
+            G_1 \\
+            G_2
+        \end{bmatrix}
+    \]
+    
+    \[
+        \begin{bmatrix}
+            F_1 \\
+            F_2
+        \end{bmatrix}
+        =
+        \frac{1}{I - H_1 \cdot H_2}
+        \begin{bmatrix}
+            G_1 - H_2 \cdot G_2 \\
+            G_2 - H_1 \cdot G_1
+        \end{bmatrix}
+    \]
+    This solution is well defined except for when $H_1 \cdot H_2 = 1$. In this case, the solution is not unique. \\
+    
+    Now, we also know that $h_1$ and $h_2$ are blur kernels, i.e. they are low-pass filters. When integrated over the 
+    defined region, the blur kernels integrate to 1. Now, we also know that the fourier trasform of a blur kernel is:
+    \[
+        H(u) = \int h(x) e^{-2\pi i u \cdot x} dx
+    \]
+    If we substitute $u = 0$, we get:
+    \[
+        H(0) = \int h(x) dx = 1
+    \]
+    Since, $h_1$ and $h_2$ are low pass filters, $|H_1(u)| \leqq 1$ and $|H_2(u)| \leqq 1$ and $|H_1(u)| = 1$ and $|H_2(u)| = 1$ at $u = 0$. \\
+    Thus, we can conclude that at low frequencies, where we have $|H_1(u)H_2(u)| = 1$, we can't recover the image components, however, this is not a problem for higher frequencies. In case of image denoising however, the situation is reversed, i.e. it is easier to recover lower frequencies, but not for higher frequencies. To tackle this, we can small noise to the denominators, i.e.
+     \[
+        \begin{bmatrix}
+            F_1 \\
+            F_2
+        \end{bmatrix}
+        =
+        \frac{1}{I - H_1 \cdot H_2 + \epsilon}
+        \begin{bmatrix}
+            G_1 - H_2 \cdot G_2 \\
+            G_2 - H_1 \cdot G_1
+        \end{bmatrix}
+    \]
+     This might lead to some artifacts creeping in during the restoration of lower frequencies.
+     In case of noise in the image, say $g_1$ = $f_1$ + $h_2 * f_2$ + $e_1$ and $g_2$ = $f_2$ + $h_1 * f_1$ + $e_2$,
+    \[
+        \begin{bmatrix}
+            G_1 - N_1 \\
+            G_2 - N_2
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            I & H_2 \\
+            H_1 & I
+        \end{bmatrix}
+        \begin{bmatrix}
+            F_1 \\
+            F_2
+        \end{bmatrix}
+    \]
+    \[
+        \begin{bmatrix}
+            F_1 \\
+            F_2
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            I & H_2 \\
+            H_1 & I
+        \end{bmatrix}^{-1}
+        \begin{bmatrix}
+            G_1 - N_1\\
+            G_2 - N_2
+        \end{bmatrix}
+    \]
+    
+    \[
+        \begin{bmatrix}
+            F_1 \\
+            F_2
+        \end{bmatrix}
+        =
+        \frac{1}{I - H_1 \cdot H_2}
+        \begin{bmatrix}
+            I & -H_2 \\
+            -H_1 & I
+        \end{bmatrix}
+        \begin{bmatrix}
+            G_1 - N_1\\
+            G_2 - N_2
+        \end{bmatrix}
+    \]
+    
+    \[
+        \begin{bmatrix}
+            F_1 \\
+            F_2
+        \end{bmatrix}
+        =
+        \frac{1}{I - H_1 \cdot H_2}
+	\left(
+	\begin{bmatrix}
+            G_1 - H_2 \cdot G_2 \\
+            G_2 - H_1 \cdot G_1
+        \end{bmatrix} 
+	+ 
+	\begin{bmatrix}
+            N_1 - H_2 \cdot N_2 \\
+            N_2 - H_1 \cdot N_1
+        \end{bmatrix} 
+	\right)
+    \]
+    At higher frequencies we don't see amplification of the noise, since the denominator is large. For lower frequencies, the denominator will be very small, but since the signal is also low, the relative error won't be very hight.
+\end{enumerate}
+\end{document}

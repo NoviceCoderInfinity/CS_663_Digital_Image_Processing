@@ -1,0 +1,149 @@
+\documentclass{article}
+\usepackage{helvet}
+
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{physics}
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\title{Question 5: Assignment 5: CS 663, Fall 2024}
+\author{
+\IEEEauthorblockN{
+    \begin{tabular}{cccc}
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Amitesh Shekhar\\
+            IIT Bombay\\
+            22b0014@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Anupam Rawat\\
+            IIT Bombay\\
+            22b3982@iitb.ac.in
+        \end{minipage} & 
+        \begin{minipage}[t]{0.23\textwidth}
+            \centering
+            Toshan Achintya Golla\\
+            IIT Bombay\\
+            22b2234@iitb.ac.in
+        \end{minipage} \\
+        \\ 
+    \end{tabular}
+}
+}
+
+\date{November 07, 2024}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{ulem,graphicx}
+\usepackage[margin=0.5in]{geometry}
+
+\begin{document}
+\maketitle
+
+\\
+
+\begin{enumerate}
+\item 
+In this exercise, we will study a nice application of  the SVD which is widely used in computer vision, computer graphics and image processing. Consider we have a set of points $\boldsymbol{P}_1 \in \mathbb{R}^{2 \times N}$ and another set of points $\boldsymbol{P}_2 \in \mathbb{R}^{2 \times N}$ such that $\boldsymbol{P}_1$ and $\boldsymbol{P}_2$ are related by an orthonormal transformation $\boldsymbol{R}$ such that $\boldsymbol{P}_1 = \boldsymbol{R} \boldsymbol{P}_2 + \boldsymbol{E}$ where $\boldsymbol{E} \in \mathbb{R}^{2 \times N}$ is an error (or noise) matrix. The aim is to find $\boldsymbol{R}$ given $\boldsymbol{P}_1$ and $\boldsymbol{P}_2$ imposing the constraint that $\boldsymbol{R}$ is orthonormal. Answer the following questions: \textsf{[30 points = 3 + 3 + 3 + 3 + 3 + (8 + 4 + 3)]}
+
+\begin{enumerate}
+    \item The standard least squares solution given by $\boldsymbol{R} = \boldsymbol{P_1} \boldsymbol{P_2}^T  (\boldsymbol{P_2} \boldsymbol{P_2}^T)^{-1}$ will fail. Why? 
+    \item To solve for $\boldsymbol{R}$ incorporating the important constraints, we seek to minimize the following quantity:
+        \begin{eqnarray}
+        E(\boldsymbol{R}) = \|\boldsymbol{P_1} - \boldsymbol{R} \boldsymbol{P_2}\|^2_F \\
+        = \textrm{trace}((\boldsymbol{P_1} -\boldsymbol{R} \boldsymbol{P_2})^T(\boldsymbol{P_1} - \boldsymbol{R} \boldsymbol{P_2})) \\
+        = \textrm{trace}(\boldsymbol{P^T_1 P_1} + \boldsymbol{P^T_2 R^T R P_2} - \boldsymbol{P^T_2 R^T P_1} - \boldsymbol{P^T_1 R P_2}) \\
+        = \textrm{trace}(\boldsymbol{P^T_1 P_1} + \boldsymbol{P^T_2 P_2} - \boldsymbol{P^T_2 R^T P_1} - \boldsymbol{P^T_1 R P_2})  \textrm{ (justify this step given the previous one) } \\
+        = \textrm{trace}(\boldsymbol{P^T_1 P_1} + \boldsymbol{P^T_2 P_2}) -2\textrm{trace}(\boldsymbol{P^T_1 R P_2}) \textrm{ (justify this step given the previous one) } 
+        \end{eqnarray}
+
+    \item Why is minimizing $E(\boldsymbol{R})$ w.r.t. $\boldsymbol{R}$ is equivalent to maximizing $\textrm{trace}(\boldsymbol{P^T_1 R P_2})$ w.r.t. $\boldsymbol{R}$?
+
+    \item Now, we have
+        \begin{eqnarray}
+        \textrm{trace}(\boldsymbol{P^T_1 R P_2}) = \textrm{trace}(\boldsymbol{R P_2 P^T_1})  \textrm{ ( justify this step ) } \\ 
+        = \textrm{trace}(\boldsymbol{R U'S'V'^T}) \textrm{ using SVD of } \boldsymbol{P_2 P^T_1 = U'S'V'^T} \\
+        = \textrm{trace}(\boldsymbol{S' V'^TR U'}) = \textrm{trace}(\boldsymbol{S' X}) \textrm{ where } \boldsymbol{X} = \boldsymbol{V'^TR U'} \\
+        \end{eqnarray}
+
+    \item For what matrix $\boldsymbol{X}$ will the above expression be maximized? (Note that $\boldsymbol{S'}$ is a diagonal matrix.)
+    \item Given this $\boldsymbol{X}$, how will you determine $\boldsymbol{R}$? 
+    \item If you had to impose the constraint that $\boldsymbol{R}$ is specifically a rotation matrix, what additional constraint would you need to impose? 
+\end{enumerate}
+
+
+\\
+    \makebox[0pt][l]{\hspace{-7pt}\textit{Soln:}} % Aligns "Answer:" to the left
+\\
+
+\begin{enumerate}
+    \item $\boldsymbol{R} = \boldsymbol{P_1} \boldsymbol{P_2}^T  (\boldsymbol{P_2} \boldsymbol{P_2}^T)^{-1}$ is required to be an orthonormal matrix.
+           \[
+              \boldsymbol{R}^T \boldsymbol{R} = \boldsymbol{I} \implies \boldsymbol{R}^T = \boldsymbol{R}^{-1}
+           \]
+            \[
+                \boldsymbol{R}^T = \left( \boldsymbol{P_1} \boldsymbol{P_2}^T  (\boldsymbol{P_2} \boldsymbol{P_2}^T)^{-1} \right)^T = (\boldsymbol{P_2} \boldsymbol{P_2}^T)^{-1} \boldsymbol{P_2} \boldsymbol{P_1}^T
+            \]
+            \[
+                \boldsymbol{R}^T \cdot \boldsymbol{R} = (\boldsymbol{P_2} \boldsymbol{P_2}^T)^{-1} \boldsymbol{P_2} \boldsymbol{P_1}^T \boldsymbol{P_1} \boldsymbol{P_2}^T  (\boldsymbol{P_2} \boldsymbol{P_2}^T)^{-1} \neq \boldsymbol{I}
+            \]
+    \item Below is the pair of equations that we need to justify:
+        \begin{eqnarray}
+        E(\boldsymbol{R}) = \|\boldsymbol{P_1} - \boldsymbol{R} \boldsymbol{P_2}\|^2_F \\
+        = \textrm{trace}((\boldsymbol{P_1} -\boldsymbol{R} \boldsymbol{P_2})^T(\boldsymbol{P_1} - \boldsymbol{R} \boldsymbol{P_2})) \\
+        = \textrm{trace}(\boldsymbol{P^T_1 P_1} + \boldsymbol{P^T_2 R^T R P_2} - \boldsymbol{P^T_2 R^T P_1} - \boldsymbol{P^T_1 R P_2}) \\
+        = \textrm{trace}(\boldsymbol{P^T_1 P_1} + \boldsymbol{P^T_2 P_2} - \boldsymbol{P^T_2 R^T P_1} - \boldsymbol{P^T_1 R P_2})  \textrm{ (since $\boldsymbol{R}$ is a orthonormal matrix, $\boldsymbol{R}^T\boldsymbol{R} = \boldsymbol{I}$) } \\
+        = \textrm{trace}(\boldsymbol{P^T_1 P_1} + \boldsymbol{P^T_2 P_2}) -2\textrm{trace}(\boldsymbol{P^T_1 R P_2}) \textrm{ (Justification provided in the below line) } 
+        \end{eqnarray}
+        For the above equation (14), we can clearly see that $\boldsymbol{P^T_2 R^T P_1} = \boldsymbol{(P^T_1 R P_2)}^T$ and we also know that if we have a matrix $\boldsymbol{A}$, then $\textrm{trace}(\boldsymbol{A}) = \textrm{trace}(\boldsymbol{A}^T)$. Hence, we can write $\textrm{trace}(\boldsymbol{P^T_1 R P_2}) = \textrm{trace}(\boldsymbol{P^T_2 R^T P_1})$.
+        Next, we also know that $trace(\boldsymbol{A} + \boldsymbol{B}) = \boldsymbol{A} + \boldsymbol{B}$. Thus using the last two properties of matrices and their trace, we can clearly say that the equation (14) is justified, given the previous one.
+
+    \item As it can be seen from the equation (14), that $E(\boldsymbol{R}) = \textrm{trace}(\boldsymbol{P^T_1 P_1} + \boldsymbol{P^T_2 P_2}) -2\textrm{trace}(\boldsymbol{P^T_1 R P_2})$. We can see that the first term is a constant. Thus the second term is the only one which can be controlled and varied. And also, since the second term varies inversely with $E(\boldsymbol{R})$, we can conclude, that to minimize $E(\boldsymbol{R})$, we need to maximize $\textrm{trace}(\boldsymbol{P^T_1 R P_2})$. Hence, minimizing $E(\boldsymbol{R})$ w.r.t. $\boldsymbol{R}$ is equivalent to maximizing $\textrm{trace}(\boldsymbol{P^T_1 R P_2})$ w.r.t. $\boldsymbol{R}$.
+
+    \item The step, $(\boldsymbol{P^T_1 R P_2})$ = \textrm{trace}$(\boldsymbol{R P_2 P^T_1})$ can be justified by the fact that, the trace of a product of matrices is invariant under cyclic permutations. This means that for any matrices $\boldsymbol{A}$, $\boldsymbol{B}$, and $\boldsymbol{C}$ where the products are defined: trace(ABC) = trace(BCA) = trace(CAB).
+
+    \item $\boldsymbol{X} = \boldsymbol{{V'}^TR U'}$. And since, all of the $\boldsymbol{V'}^T$, $\boldsymbol{U}$ and $\boldsymbol{R}$ are orthonormal, we can easily conclude that $\boldsymbol{X}$ is also orthonormal. \newline
+            Now, since $\boldsymbol{S'}$ is a diagonal matrix, trace($\boldsymbol{S'}\boldsymbol{X}$) will be maximized when the diagonal entries of $\boldsymbol{X}$ is maximized. The condition that X is orthonormal and that diagonal entries of X are maximized, can be only satisfied when $\boldsymbol{X}$ is the identity matrix, $\boldsymbol{I}$.
+    \item Once again, $\boldsymbol{X}$ is given by $\boldsymbol{{V'}^TR U'}$. And since $\boldsymbol{X}$ is the identity matrix, $\boldsymbol{{V'}^TR U'} = \boldsymbol{I}$. This implies that $\boldsymbol{R} = \boldsymbol{V'U'^T}$, leading to $\boldsymbol{X}$ being the identity matrix.
+    \item To ensure that \( R \) is specifically a rotation matrix, not just any orthonormal matrix, we need to impose the following additional constraint:
+   \[
+   \det(R) = 1
+   \]
+- A rotation matrix \( R \) is an orthonormal matrix with a determinant of +1. This ensures that \( R \) represents a proper rotation, preserving the orientation of the space.\\
+- Orthogonal matrices can have determinants of either +1 or -1. A determinant of -1 would indicate a reflection or improper rotation (a combination of rotation and reflection), which is not what we want for a pure rotation matrix.\\
+In order to impose this constraint, when computing \( R = U' V'^T \), if \( \det(R) = -1 \), you need to adjust the sign of one of the columns in \( U' \) or \( V' \) to ensure \( \det(R) = 1 \). Specifically, you can modify \( U' \) by flipping the sign of the last column:
+  \[
+  U'_{\text{adjusted}} = U' \text{diag}(1, 1, \ldots, -1)
+  \]
+
+  This change will make \( \det(U'_{\text{adjusted}} V'^T) = 1 \) while preserving the orthogonality of \( R \).
+\\
+In conclusion, to ensure \( R \) is a rotation matrix, use:
+\[
+R = U'_{\text{adjusted}} V'^T
+\]
+where \( U'_{\text{adjusted}} \) is modified to satisfy \( \det(R) = 1 \).
+\end{enumerate}
+
+
+\end{enumerate}
+
+\end{document}
